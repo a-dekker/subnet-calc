@@ -1,0 +1,20 @@
+# Rename this file as subnet-calc.changes to include changelog
+# entries in your RPM file.
+#
+# Add new changelog entries following the format below.
+# Add newest entries to the top of the list.
+# Separate entries from eachother with a blank line.
+
+# * date Author's Name <author's email> version-release
+# - Summary of changes
+
+* Thu Jun 18 2014 Arno Dekker <jack.tar@example.com> 0.0.1-2
+- Added class D and E
+- Set Network mask default according to class
+- Added max subnets
+
+* Mon Jun 15 2014 Arno Dekker <jack.tar@example.com> 0.0.1-1
+- Changed IP address input to avoid decimal comma issues with some languages
+
+* Sun Jun 14 2015 Arno Dekker <jack.tar@example.com> 0.0.1-0
+- Initial version
