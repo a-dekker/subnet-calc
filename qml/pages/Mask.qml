@@ -72,22 +72,27 @@ Page {
                 visible: !(index & 1)
             }
 
-            Label {
-                id: label
-                opacity: (index & 1) ? 0.7 : 0.9
-                text: Mask
+            Item {
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: Theme.fontSizeMedium
-                font.bold: true
-                color: listItem.highlighted ? Theme.highlightColor : Theme.primaryColor
-            }
-            Label {
-                anchors.top: label.bottom
-                text: Bitlength
-                font.pixelSize: Theme.fontSizeExtraSmall
-                color: listItem.highlighted ? Theme.highlightColor : Theme.secondaryColor
-                anchors.horizontalCenter: parent.horizontalCenter
+                Label {
+                    id: label
+                    opacity: (index & 1) ? 0.7 : 0.9
+                    anchors.bottom: sublabel.top
+                    text: Mask
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    font.pixelSize: Theme.fontSizeMedium
+                    font.bold: true
+                    color: listItem.highlighted ? Theme.highlightColor : Theme.primaryColor
+                }
+                Label {
+                    id: sublabel
+                    anchors.top: label.bottom
+                    text: Bitlength
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    color: listItem.highlighted ? Theme.highlightColor : Theme.secondaryColor
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
             }
             onClicked: {
                 setmask()

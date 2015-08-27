@@ -21,13 +21,11 @@ Page {
             SectionHeader {
                 text: qsTr("Info")
             }
-            Rectangle {
-                color: "#999999"
-                x: Theme.paddingLarge * 3
-                width: parent.width - Theme.paddingLarge * 3 * 2
-                height: 2
-                anchors.leftMargin: 20
-                anchors.topMargin: 30
+            Separator {
+                color: Theme.primaryColor
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Qt.AlignHCenter
             }
             Label {
                 text: "subnet-calc"
@@ -55,13 +53,11 @@ Page {
             SectionHeader {
                 text: qsTr("Author")
             }
-            Rectangle {
-                color: "#999999"
-                x: Theme.paddingLarge * 3
-                width: parent.width - Theme.paddingLarge * 3 * 2
-                height: 2
-                anchors.leftMargin: 20
-                anchors.topMargin: 30
+            Separator {
+                color: Theme.primaryColor
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Qt.AlignHCenter
             }
             Label {
                 text: "© Arno Dekker 2015"

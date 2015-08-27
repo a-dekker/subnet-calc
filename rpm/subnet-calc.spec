@@ -14,7 +14,7 @@ Name:       harbour-subnet-calc
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Calculate IPv4 subnet stuff
 Version:    0.1
-Release:    2
+Release:    3
 Group:      Qt/Qt
 License:    LICENSE
 URL:        https://github.com/a-dekker/subnet-calc

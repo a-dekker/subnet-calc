@@ -220,6 +220,23 @@ Page {
         tot_subnets.text = Math.round(subnets)
     }
 
+    function resetValues() {
+        ip_address_1.text = ""
+        ip_address_2.text = ""
+        ip_address_3.text = ""
+        ip_address_4.text = ""
+        netw_class.text = "-"
+        wildcard.text = "-"
+        subnetid.text = "-"
+        startaddr.text = "-"
+        endaddr.text = "-"
+        tot_hosts.text = "-"
+        tot_subnets.text = "-"
+        broadcast.text = "-"
+        pub_priv.text = "-"
+        globalMask = "255.255.255.0 /24"
+    }
+
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
@@ -251,6 +268,14 @@ Page {
             PageHeader {
                 title: qsTr("subnet-calc")
             }
+                IconButton {
+                    icon.source: "image://theme/icon-l-cancel"
+                    anchors.right: parent.right
+                    anchors.rightMargin: Theme.paddingMedium
+                    onClicked: {
+                        resetValues()
+                    }
+                }
             Row {
                 x: Theme.paddingLarge
                 y: Theme.paddingLarge
@@ -263,7 +288,7 @@ Page {
                 TextField {
                     id: ip_address_1
 
-                    placeholderText: "..."
+                    placeholderText: "---"
                     width: (column.width + Theme.paddingLarge)  / 6
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
@@ -281,7 +306,14 @@ Page {
                     }
                     onFocusChanged: {
                         if (ip_address_1.text !== "") {
+                            // remove leading zero's
+                            ip_address_1.text = ip_address_1.text.replace(/^0+([1-9])/, '$1')
                             calculateAll()
+                        }
+                    }
+                    onTextChanged: {
+                        if (text.length === 3) {
+                            ip_address_2.focus = true
                         }
                     }
                 }
@@ -292,7 +324,7 @@ Page {
                 TextField {
                     id: ip_address_2
 
-                    placeholderText: "..."
+                    placeholderText: "---"
                     width: (column.width + Theme.paddingLarge)  / 6
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
@@ -310,7 +342,14 @@ Page {
                     }
                     onFocusChanged: {
                         if (ip_address_2.text !== "") {
+                            // remove leading zero's
+                            ip_address_2.text = ip_address_2.text.replace(/^0+([1-9])/, '$1')
                             calculateAll()
+                        }
+                    }
+                    onTextChanged: {
+                        if (text.length === 3) {
+                            ip_address_3.focus = true
                         }
                     }
                 }
@@ -320,7 +359,7 @@ Page {
                 TextField {
                     id: ip_address_3
 
-                    placeholderText: "..."
+                    placeholderText: "---"
                     width: (column.width + Theme.paddingLarge)  / 6
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
@@ -338,7 +377,14 @@ Page {
                     }
                     onFocusChanged: {
                         if (ip_address_3.text !== "") {
+                            // remove leading zero's
+                            ip_address_3.text = ip_address_3.text.replace(/^0+([1-9])/, '$1')
                             calculateAll()
+                        }
+                    }
+                    onTextChanged: {
+                        if (text.length === 3) {
+                            ip_address_4.focus = true
                         }
                     }
                 }
@@ -349,7 +395,7 @@ Page {
                 TextField {
                     id: ip_address_4
 
-                    placeholderText: "..."
+                    placeholderText: "---"
                     width: (column.width - (Theme.paddingLarge * 2)) / 5
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
@@ -367,6 +413,8 @@ Page {
                     }
                     onFocusChanged: {
                         if (ip_address_4.text !== "") {
+                            // remove leading zero's
+                            ip_address_4.text = ip_address_4.text.replace(/^0+([1-9])/, '$1')
                             calculateAll()
                         }
                     }
@@ -378,19 +426,25 @@ Page {
                 width: parent.width
                 Label {
                     text: "Network mask"
-                    width: (column.width - (Theme.paddingLarge * 2)) / 2
+                    width: (column.width - (Theme.paddingLarge * 4)) / 2
                 }
                 TextField {
                     id: subnetmask
                     readOnly: true
                     text: mainapp.globalMask
                     color: Theme.highlightColor
+                    width: (column.width + (Theme.paddingLarge * 2)) / 2
                     horizontalAlignment: Text.AlignRight
                     onClicked: {
-                        // GlobVars.myDish = dish1.text
                         pageStack.push(Qt.resolvedUrl("Mask.qml"))
                     }
                 }
+            }
+            Separator {
+                color: Theme.primaryColor
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Qt.AlignHCenter
             }
             Row {
                 x: Theme.paddingLarge
