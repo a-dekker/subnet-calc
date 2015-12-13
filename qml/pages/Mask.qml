@@ -3,6 +3,7 @@ import Sailfish.Silica 1.0
 
 Page {
     id: maskPage
+    allowedOrientations: Orientation.Portrait | Orientation.Landscape | Orientation.LandscapeInverted
 
     function appendMask(mask, bitlength) {
         masklist.model.append({

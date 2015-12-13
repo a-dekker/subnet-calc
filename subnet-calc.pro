@@ -22,13 +22,26 @@ OTHER_FILES += qml/subnet-calc.qml \
     rpm/subnet-calc.spec \
     translations/*.ts \
     harbour-subnet-calc.desktop \
-    harbour-subnet-calc.png \
     qml/pages/About.qml \
     qml/pages/MainPage.qml \
     rpm/subnet-calc.spec \
     qml/pages/Popup.qml \
     qml/pages/Mask.qml \
     qml/pages/Help.qml
+
+icon86.files += icons/86x86/harbour-subnet-calc.png
+icon86.path = /usr/share/icons/hicolor/86x86/apps
+
+icon108.files += icons/108x108/harbour-subnet-calc.png
+icon108.path = /usr/share/icons/hicolor/108x108/apps
+
+icon128.files += icons/128x128/harbour-subnet-calc.png
+icon128.path = /usr/share/icons/hicolor/128x128/apps
+
+icon256.files += icons/256x256/harbour-subnet-calc.png
+icon256.path = /usr/share/icons/hicolor/256x256/apps
+
+INSTALLS += icon86 icon108 icon128 icon256
 
 # to disable building translations every time, comment out the
 # following CONFIG line

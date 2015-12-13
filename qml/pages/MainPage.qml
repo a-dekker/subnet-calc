@@ -1,13 +1,29 @@
+//
 // Code reused from JavaScript Subnet Calculator written by John Thaemltiz
-
+//
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import org.nemomobile.notifications 1.0
 
 Page {
     id: page
+    allowedOrientations: Orientation.Portrait | Orientation.Landscape
+                         | Orientation.LandscapeInverted
 
-    Popup {
-        id: banner
+    function banner(category, message) {
+        notification.close()
+        notification.previewBody = "subnet-calc"
+        notification.previewSummary = message
+        notification.publish()
+    }
+
+    Notification {
+        id: notification
+        itemCount: 1
+    }
+
+    Component.onCompleted: {
+        ip_address_1.focus = true
     }
 
     onStatusChanged: {
@@ -19,16 +35,17 @@ Page {
         }
     }
 
-    function calculateAll()
-    {
-        if ( ip_address_1.text !== "" && ip_address_2.text !== "" && ip_address_3.text !== "" && ip_address_4.text !== "" ) {
-            var ipaddress = ip_address_1.text + "." + ip_address_2.text + "." + ip_address_3.text + "." + ip_address_4.text
+    function calculateAll() {
+        if (ip_address_1.text !== "" && ip_address_2.text !== ""
+                && ip_address_3.text !== "" && ip_address_4.text !== "") {
+            var ipaddress = ip_address_1.text + "." + ip_address_2.text + "."
+                    + ip_address_3.text + "." + ip_address_4.text
             if (validateIPaddress(ipaddress)) {
                 mainapp.globalIP = ipaddress
                 calculateWildcard(mainapp.globalMask)
                 // calculateBroadcast(ipaddress,wildcard.text)
-                caluclateStartingIP(ipaddress,mainapp.globalMask)
-                calculateEndingIP(ipaddress,wildcard.text)
+                caluclateStartingIP(ipaddress, mainapp.globalMask)
+                calculateEndingIP(ipaddress, wildcard.text)
                 hostCount(mainapp.globalMask)
                 isPrivateIP(ipaddress)
                 var bits = parseInt(mainapp.globalMask.replace(/^.+\//g, ""))
@@ -37,10 +54,9 @@ Page {
         }
     }
 
-    function validateIPaddress(ipaddress)
-    {
+    function validateIPaddress(ipaddress) {
         var ipformat
-        if ( ipaddress === "" ) {
+        if (ipaddress === "") {
             return false
         }
         // class A
@@ -82,71 +98,70 @@ Page {
         if (ipaddress.match(ipformat)) {
             return true
         } else {
-            banner.notify("Invalid IP address")
+            banner("WARNING", qsTr("Invalid IP address"))
             return false
         }
     }
 
-    function calculateBroadcast(ipaddress,wildcardaddr) {
+    function calculateBroadcast(ipaddress, wildcardaddr) {
         // Calculate the broadcast address (the last ip address in the network) and
         //  return it as an int array.
         //  We need the network address and the wildcard mask for this.
         // work around int32
         var nAddr = ipaddress.split('.')
         var nWild = wildcardaddr.split('.')
-        var a = new Array(0,0,0,0);
-        for(var i=0;i<4;i++){
-            a[i] = nAddr[i] | nWild[i];
+        var a = new Array(0, 0, 0, 0)
+        for (var i = 0; i < 4; i++) {
+            a[i] = nAddr[i] | nWild[i]
         }
         broadcast.text = a.join('.')
         return a
     }
 
-    function calculateWildcard(subnetmask)
-    {
+    function calculateWildcard(subnetmask) {
         // subnet mask bits flipped
         subnetmask = subnetmask.replace(/\/.+$/g, "")
         var nAddr = subnetmask.split('.')
-        var a = new Array(0,0,0,0);
-        for(var i=0;i<4;i++){
-            a[i] = 255 - nAddr[i];
+        var a = new Array(0, 0, 0, 0)
+        for (var i = 0; i < 4; i++) {
+            a[i] = 255 - nAddr[i]
         }
         wildcard.text = a.join('.')
     }
 
-    function subnetID(ipaddress,subnetmask){
+    function subnetID(ipaddress, subnetmask) {
         // Calculate the subnet id  (the first address in the network) and return it as an
         //  int array.
         //  We need the network address and the subnet mask for this.
         var nAddr = ipaddress.split('.')
         subnetmask = subnetmask.replace(/\/.+$/g, "")
         var nMask = subnetmask.split('.')
-        var a = new Array(0,0,0,0);
-        for(var i=0;i<4;i++){
-            a[i] = nAddr[i] & nMask[i];
+        var a = new Array(0, 0, 0, 0)
+        for (var i = 0; i < 4; i++) {
+            a[i] = nAddr[i] & nMask[i]
         }
         subnetid.text = a.join('.')
         return a
     }
 
-    function caluclateStartingIP(aNet,aMask){
+    function caluclateStartingIP(aNet, aMask) {
         // Calculate the subnet id available address in the network and return it as an
         //  int array.  This is basically one more than the network address (subnet ID).
         //  We need the network address and the subnet mask for this.
-        var a = subnetID(aNet,aMask);
-        var d = octet2dec(a);
-        d = d+1;
+        var a = subnetID(aNet, aMask)
+        var d = octet2dec(a)
+        d = d + 1
         startaddr.text = dec2octet(d).join('.')
     }
 
-    function calculateEndingIP(aNet,aWild){
+    function calculateEndingIP(aNet, aWild) {
         // Calculate the last available ip address in the network and return it as
         //  an int array.  This is basically one less than the broadcast address.
         //  We need the network address and the wildcard mask for this.
         // work around int32
-        var a = new calculateBroadcast(aNet,aWild)
-        var d = octet2dec(a);
-        d = d-1;
+        var a = new calculateBroadcast(aNet, aWild)
+        var d = octet2dec(a)
+        d = d - 1
         endaddr.text = dec2octet(d).join('.')
         // return dec2octet(d);
     }
@@ -155,25 +170,25 @@ Page {
         // Count the number of hosts based on a subnet mask
         // take the bits from the mask string
         var bits = 32 - aMask.replace(/^.+\//g, "")
-        tot_hosts.text = Math.pow(2,bits) -2
-        return Math.pow(2,bits) -2;
+        tot_hosts.text = Math.pow(2, bits) - 2
+        return Math.pow(2, bits) - 2
     }
 
     function octet2cidr(aMask) {
         // Convert a subnet mask array into CIDR (# of bits) (255.255.255.0 = 24 etc.)
-        var mask = octet2dec(aMask);
+        var mask = octet2dec(aMask)
         // get binary string
-        mask = mask.toString(2);
+        mask = mask.toString(2)
         // return mask length
-        return mask.indexOf(0);
+        return mask.indexOf(0)
     }
 
-    function dec2octet(d){
+    function dec2octet(d) {
         // Convert decimal to our array of 4 ints.
         //alert("d="+d+" "+d.toString(2)+"="+d.toString(2).substring(0,8)+"="+parseInt(d.toString(2).substring(0,8),2));
         var zeros = "00000000000000000000000000000000"
         var b = d.toString(2)
-        var b = zeros.substring(0,32-b.length) + b
+        var b = zeros.substring(0, 32 - b.length) + b
         var a = new Array(
             parseInt(b.substring(0,8),2)    // 32 bit integer issue (d & 4278190080)/16777216   //Math.pow(2,32) - Math.pow(2,24);
             , (d & 16711680)/65536    //Math.pow(2,24) - Math.pow(2,16);
@@ -183,39 +198,41 @@ Page {
         return a
     }
 
-    function octet2dec(a){
+    function octet2dec(a) {
         // Convert our array of 4 ints into a decimal (watch out for 16 bit JS integers here)
         //alert("octet2dec1 "+a[0]+"\n"+dec2bin(a[0])+"\n"+dec2bin(a[0] * 16777216));
         // poor mans bit shifting (Int32 issue)
-        var d = 0;
-        d = d + parseInt(a[0]) * 16777216 ;  //Math.pow(2,24);
-        d = d + a[1] * 65536;     //Math.pow(2,16);
-        d = d + a[2] * 256;    //Math.pow(2,8);
-        d = d + a[3];
-        return d;
+        var d = 0
+        d = d + parseInt(a[0]) * 16777216 //Math.pow(2,24);
+        d = d + a[1] * 65536 //Math.pow(2,16);
+        d = d + a[2] * 256 //Math.pow(2,8);
+        d = d + a[3]
+        return d
     }
 
     function isPrivateIP(ip) {
-        var parts = ip.split('.');
-        if (parts[0] === '10' ||
-            (parts[0] === '172' && (parseInt(parts[1], 10) >= 16 && parseInt(parts[1], 10) <= 31)) ||
-            (parts[0] === '192' && parts[1] === '168')) {
+        var parts = ip.split('.')
+        if (parts[0] === '10' || (parts[0] === '172'
+                                  && (parseInt(parts[1],
+                                               10) >= 16 && parseInt(parts[1],
+                                                                     10) <= 31))
+                || (parts[0] === '192' && parts[1] === '168')) {
             pub_priv.text = "private IP"
-            return true;
+            return true
         }
         pub_priv.text = "public IP"
-        return false;
+        return false
     }
 
     function calculateNumberOfSubnets(nwClass, ones) {
         // (/24 means 24 zeros in the bin string)
         var subnets = 0
         if (nwClass === 'A') {
-            subnets = Math.pow(2, (ones-8))
+            subnets = Math.pow(2, (ones - 8))
         } else if (nwClass === 'B') {
-            subnets = Math.pow(2, (ones-16))
+            subnets = Math.pow(2, (ones - 16))
         } else if (nwClass === 'C') {
-            subnets = Math.pow(2, (ones-24))
+            subnets = Math.pow(2, (ones - 24))
         }
         tot_subnets.text = Math.round(subnets)
     }
@@ -237,7 +254,6 @@ Page {
         globalMask = "255.255.255.0 /24"
     }
 
-
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
@@ -257,6 +273,8 @@ Page {
         // Tell SilicaFlickable the height of its content.
         contentHeight: column.height
 
+        VerticalScrollDecorator {
+        }
 
         // Place our content in a Column.  The PageHeader is always placed at the top
         // of the page, followed by our content.
@@ -268,14 +286,15 @@ Page {
             PageHeader {
                 title: qsTr("subnet-calc")
             }
-                IconButton {
-                    icon.source: "image://theme/icon-l-cancel"
-                    anchors.right: parent.right
-                    anchors.rightMargin: Theme.paddingMedium
-                    onClicked: {
-                        resetValues()
-                    }
+            IconButton {
+                icon.source: "image://theme/icon-m-clear"
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.paddingMedium
+                visible: isPortrait
+                onClicked: {
+                    resetValues()
                 }
+            }
             Row {
                 x: Theme.paddingLarge
                 y: Theme.paddingLarge
@@ -283,13 +302,15 @@ Page {
                 width: parent.width
                 Label {
                     text: "IP address"
-                    width: (column.width - (Theme.paddingLarge * 2)) / 4
+                    width: isLandscape ? ((column.width - (Theme.paddingLarge * 5)) / 2)
+                                         - iconButtonLandscape.width : (column.width - (Theme.paddingLarge * 2)) / 4
                 }
                 TextField {
                     id: ip_address_1
 
                     placeholderText: "---"
-                    width: (column.width + Theme.paddingLarge)  / 6
+                    width: isPortrait ? (column.width + Theme.paddingLarge)
+                                        / 6 : (column.width + Theme.paddingLarge) / 8
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
                     }
@@ -299,15 +320,16 @@ Page {
                     text: ""
                     EnterKey.enabled: text.trim().length > 0
                     EnterKey.highlighted: true
-                    EnterKey.text: "OK"
+                    EnterKey.text: "→"
                     EnterKey.onClicked: {
                         calculateAll()
-                        ip_address_1.focus = false
+                        ip_address_2.focus = true
                     }
                     onFocusChanged: {
                         if (ip_address_1.text !== "") {
                             // remove leading zero's
-                            ip_address_1.text = ip_address_1.text.replace(/^0+([1-9])/, '$1')
+                            ip_address_1.text = ip_address_1.text.replace(
+                                        /^0+([1-9])/, '$1')
                             calculateAll()
                         }
                     }
@@ -325,7 +347,8 @@ Page {
                     id: ip_address_2
 
                     placeholderText: "---"
-                    width: (column.width + Theme.paddingLarge)  / 6
+                    width: isPortrait ? (column.width + Theme.paddingLarge)
+                                        / 6 : (column.width + Theme.paddingLarge) / 8
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
                     }
@@ -335,15 +358,16 @@ Page {
                     text: ""
                     EnterKey.enabled: text.trim().length > 0
                     EnterKey.highlighted: true
-                    EnterKey.text: "OK"
+                    EnterKey.text: "→"
                     EnterKey.onClicked: {
                         calculateAll()
-                        ip_address_2.focus = false
+                        ip_address_3.focus = true
                     }
                     onFocusChanged: {
                         if (ip_address_2.text !== "") {
                             // remove leading zero's
-                            ip_address_2.text = ip_address_2.text.replace(/^0+([1-9])/, '$1')
+                            ip_address_2.text = ip_address_2.text.replace(
+                                        /^0+([1-9])/, '$1')
                             calculateAll()
                         }
                     }
@@ -360,7 +384,8 @@ Page {
                     id: ip_address_3
 
                     placeholderText: "---"
-                    width: (column.width + Theme.paddingLarge)  / 6
+                    width: isPortrait ? (column.width + Theme.paddingLarge)
+                                        / 6 : (column.width + Theme.paddingLarge) / 8
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
                     }
@@ -370,15 +395,16 @@ Page {
                     text: ""
                     EnterKey.enabled: text.trim().length > 0
                     EnterKey.highlighted: true
-                    EnterKey.text: "OK"
+                    EnterKey.text: "→"
                     EnterKey.onClicked: {
                         calculateAll()
-                        ip_address_3.focus = false
+                        ip_address_4.focus = true
                     }
                     onFocusChanged: {
                         if (ip_address_3.text !== "") {
                             // remove leading zero's
-                            ip_address_3.text = ip_address_3.text.replace(/^0+([1-9])/, '$1')
+                            ip_address_3.text = ip_address_3.text.replace(
+                                        /^0+([1-9])/, '$1')
                             calculateAll()
                         }
                     }
@@ -390,13 +416,14 @@ Page {
                 }
                 Label {
                     text: "."
-                    anchors.margins : 0
+                    anchors.margins: 0
                 }
                 TextField {
                     id: ip_address_4
 
                     placeholderText: "---"
-                    width: (column.width - (Theme.paddingLarge * 2)) / 5
+                    width: isPortrait ? (column.width + Theme.paddingLarge)
+                                        / 6 : (column.width + Theme.paddingLarge) / 8
                     validator: RegExpValidator {
                         regExp: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
                     }
@@ -414,9 +441,18 @@ Page {
                     onFocusChanged: {
                         if (ip_address_4.text !== "") {
                             // remove leading zero's
-                            ip_address_4.text = ip_address_4.text.replace(/^0+([1-9])/, '$1')
+                            ip_address_4.text = ip_address_4.text.replace(
+                                        /^0+([1-9])/, '$1')
                             calculateAll()
                         }
+                    }
+                }
+                IconButton {
+                    id: iconButtonLandscape
+                    icon.source: "image://theme/icon-m-clear"
+                    visible: isLandscape
+                    onClicked: {
+                        resetValues()
                     }
                 }
             }
@@ -574,22 +610,6 @@ Page {
                     color: Theme.secondaryColor
                 }
             }
-/*            Row {
-                x: Theme.paddingLarge
-                y: Theme.paddingLarge
-                width: parent.width
-                Label {
-                    text: "Available subnets"
-                    width: (column.width - (Theme.paddingLarge * 2)) / 2
-                }
-                Label {
-                    id: avail_sub
-                    text: "-"
-                    horizontalAlignment: Text.AlignRight
-                    width: (column.width - (Theme.paddingLarge * 2)) / 2
-                    color: Theme.secondaryColor
-                }
-            } */
             Row {
                 x: Theme.paddingLarge
                 y: Theme.paddingLarge
@@ -609,4 +629,3 @@ Page {
         }
     }
 }
-
