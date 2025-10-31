@@ -112,7 +112,7 @@ Page {
         var nWild = wildcardaddr.split('.')
         var a = new Array(0, 0, 0, 0)
         for (var i = 0; i < 4; i++) {
-            a[i] = nAddr[i] | nWild[i]
+            a[i] = Number(nAddr[i]) | Number(nWild[i])
         }
         broadcast.text = a.join('.')
         return a
@@ -124,7 +124,7 @@ Page {
         var nAddr = subnetmask.split('.')
         var a = new Array(0, 0, 0, 0)
         for (var i = 0; i < 4; i++) {
-            a[i] = 255 - nAddr[i]
+            a[i] = 255 - Number(nAddr[i])
         }
         wildcard.text = a.join('.')
     }
@@ -138,7 +138,7 @@ Page {
         var nMask = subnetmask.split('.')
         var a = new Array(0, 0, 0, 0)
         for (var i = 0; i < 4; i++) {
-            a[i] = nAddr[i] & nMask[i]
+            a[i] = Number(nAddr[i]) & Number(nMask[i])
         }
         subnetid.text = a.join('.')
         return a
