@@ -8,6 +8,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Fri Oct 31 2015 DeSamurai <jack.tar@example.com> 0.0.3-0
+- Fixed calculating issues on 64bit devices
+
 * Sun Dec 13 2015 Arno Dekker <jack.tar@example.com> 0.0.2-0
 - Added landscape support
 - Focus on IP input at startup
