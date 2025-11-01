@@ -14,7 +14,7 @@ Name:       harbour-subnet-calc
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Calculate IPv4 subnet stuff
 Version:    0.2
-Release:    0
+Release:    1
 Group:      Qt/Qt
 License:    LICENSE
 URL:        https://github.com/a-dekker/subnet-calc
@@ -62,14 +62,10 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}
+%attr(755,root,root) %{_bindir}/%{name}
 %{_datadir}/%{name}/qml
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/86x86/apps/%{name}.png
-%{_datadir}/icons/hicolor/108x108/apps/%{name}.png
-%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
-%{_datadir}/icons/hicolor/256x256/apps/%{name}.png
-/usr/bin
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
 /usr/share/harbour-subnet-calc
 /usr/share/applications
-/usr/share/icons/hicolor/86x86/apps
+/usr/share/icons/hicolor/*/apps

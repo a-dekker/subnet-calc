@@ -3,12 +3,11 @@
 //
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import org.nemomobile.notifications 1.0
+// import Nemo.Configuration 1.0
+import Nemo.Notifications 1.0
 
 Page {
     id: page
-    allowedOrientations: Orientation.Portrait | Orientation.Landscape
-                         | Orientation.LandscapeInverted
 
     function banner(category, message) {
         notification.close()
@@ -112,7 +111,7 @@ Page {
         var nWild = wildcardaddr.split('.')
         var a = new Array(0, 0, 0, 0)
         for (var i = 0; i < 4; i++) {
-            a[i] = nAddr[i] | nWild[i]
+            a[i] = Number(nAddr[i]) | Number(nWild[i])
         }
         broadcast.text = a.join('.')
         return a
@@ -124,7 +123,7 @@ Page {
         var nAddr = subnetmask.split('.')
         var a = new Array(0, 0, 0, 0)
         for (var i = 0; i < 4; i++) {
-            a[i] = 255 - nAddr[i]
+            a[i] = 255 - Number(nAddr[i])
         }
         wildcard.text = a.join('.')
     }
@@ -138,7 +137,7 @@ Page {
         var nMask = subnetmask.split('.')
         var a = new Array(0, 0, 0, 0)
         for (var i = 0; i < 4; i++) {
-            a[i] = nAddr[i] & nMask[i]
+            a[i] = Number(nAddr[i]) & Number(nMask[i])
         }
         subnetid.text = a.join('.')
         return a
@@ -268,6 +267,11 @@ Page {
                 text: qsTr("Help")
                 onClicked: pageStack.push(Qt.resolvedUrl("Help.qml"))
             }
+            MenuItem {
+                text: qsTr("IPv6")
+                onClicked: pageStack.replace(Qt.resolvedUrl("IPv6.qml"))
+                enabled: false
+            }
         }
 
         // Tell SilicaFlickable the height of its content.
@@ -284,7 +288,7 @@ Page {
             width: page.width
             spacing: page.height / page.width > 1.6 ? Theme.paddingMedium : Theme.paddingSmall
             PageHeader {
-                title: qsTr("subnet-calc")
+                title: qsTr("subnet-calc (IPv4)")
             }
             IconButton {
                 icon.source: "image://theme/icon-m-clear"
@@ -472,7 +476,7 @@ Page {
                     width: (column.width + (Theme.paddingLarge * 2)) / 2
                     horizontalAlignment: Text.AlignRight
                     onClicked: {
-                        pageStack.push(Qt.resolvedUrl("Mask.qml"))
+                        pageStack.push(Qt.resolvedUrl("MaskIPv4.qml"))
                     }
                 }
             }

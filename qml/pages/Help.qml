@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 
 Page {
     id: helpPage
-    allowedOrientations: Orientation.Portrait | Orientation.Landscape | Orientation.LandscapeInverted
+
     SilicaFlickable {
         anchors.fill: parent
         contentWidth: parent.width

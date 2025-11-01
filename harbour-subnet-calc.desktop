@@ -5,3 +5,7 @@ Name=subnet-calc
 Icon=harbour-subnet-calc
 Exec=harbour-subnet-calc
 
+[X-Sailjail]
+OrganizationName=org.adekker
+ApplicationName=subnet-calc
+Permissions=

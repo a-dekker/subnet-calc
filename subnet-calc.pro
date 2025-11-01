@@ -24,10 +24,19 @@ OTHER_FILES += qml/subnet-calc.qml \
     harbour-subnet-calc.desktop \
     qml/pages/About.qml \
     qml/pages/MainPage.qml \
+    qml/pages/IPv6.qml \
     rpm/subnet-calc.spec \
     qml/pages/Popup.qml \
-    qml/pages/Mask.qml \
+    qml/pages/MaskIPv4.qml \
+    qml/pages/MaskIPv6.qml \
     qml/pages/Help.qml
+
+isEmpty(VERSION) {
+    VERSION = $$system( egrep "^Version:\|^Release:" rpm/subnet-calc.spec |tr -d "[A-Z][a-z]: " | tr "\\\n" "-" | sed "s/\.$//g"| tr -d "[:space:]")
+    message("VERSION is unset, assuming $$VERSION")
+}
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += BUILD_YEAR=$$system(date '+%Y')
 
 icon86.files += icons/86x86/harbour-subnet-calc.png
 icon86.path = /usr/share/icons/hicolor/86x86/apps

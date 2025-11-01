@@ -8,6 +8,12 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sun Nov 1 2025 Arno Dekker <jack.tar@example.com> 0.0.2-1
+- Added Sailjail permission
+- Switch to Nemo.Notifications
+- Explicit number conversion thanks DeSamurai
+- First attempt on IPv6 subnets, but not finished so disabled
+
 * Sun Dec 13 2015 Arno Dekker <jack.tar@example.com> 0.0.2-0
 - Added landscape support
 - Focus on IP input at startup

@@ -3,8 +3,9 @@ import Sailfish.Silica 1.0
 
 Page {
     id: aboutPage
-    allowedOrientations: Orientation.Portrait | Orientation.Landscape
-                         | Orientation.LandscapeInverted
+
+    property bool largeScreen: Screen.sizeCategory === Screen.Large
+                               || Screen.sizeCategory === Screen.ExtraLarge
 
     SilicaFlickable {
         anchors.fill: parent
@@ -38,7 +39,7 @@ Page {
             }
             Image {
                 anchors.horizontalCenter: parent.horizontalCenter
-                source: "/usr/share/icons/hicolor/86x86/apps/harbour-subnet-calc.png"
+                source: isLandscape ? (largeScreen ? "/usr/share/icons/hicolor/256x256/apps/harbour-subnet-calc.png" : "/usr/share/icons/hicolor/86x86/apps/harbour-subnet-calc.png") : (largeScreen ? "/usr/share/icons/hicolor/256x256/apps/harbour-subnet.calc.png" : "/usr/share/icons/hicolor/128x128/apps/harbour-subnet-calc.png")
             }
             Label {
                 text: qsTr("Version") + " " + version
@@ -46,7 +47,7 @@ Page {
                 color: Theme.secondaryHighlightColor
             }
             Label {
-                text: qsTr("Calculate IPv4 subnet related values")
+                text: qsTr("Calculate IP subnet related values")
                 font.pixelSize: Theme.fontSizeSmall
                 width: parent.width
                 horizontalAlignment: Text.Center
@@ -65,7 +66,7 @@ Page {
                 horizontalAlignment: Qt.AlignHCenter
             }
             Label {
-                text: "© Arno Dekker 2015"
+                text: "© Arno Dekker 2015-" + buildyear
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }

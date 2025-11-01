@@ -33,7 +33,6 @@ modification, are permitted provided that the following conditions are met:
 #endif
 
 #include <QtQml>
-#include <QProcess>
 #include <qqml.h>
 #include <QtGui>
 #include <QQuickView>
@@ -49,15 +48,6 @@ int main(int argc, char *argv[])
     //   - SailfishApp::createView() to get a new QQuickView * instance
     //   - SailfishApp::pathTo(QString) to get a QUrl to a resource file
     //
-    QProcess appinfo;
-    QString appversion;
-    // QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
-    // read app version from rpm database on startup
-    appinfo.start("/bin/rpm", QStringList() << "-qa" << "--queryformat" << "%{version}-%{RELEASE}" << "harbour-subnet-calc");
-    appinfo.waitForFinished(-1);
-    if (appinfo.bytesAvailable() > 0) {
-        appversion = appinfo.readAll();
-    }
     // To display the view, call "show()" (will show fullscreen on device).
 
     QGuiApplication* app = SailfishApp::application(argc, argv);
@@ -65,7 +55,8 @@ int main(int argc, char *argv[])
     QLocale::setDefault(QLocale::c());
 
     QQuickView* view = SailfishApp::createView();
-    view->rootContext()->setContextProperty("version", appversion);
+    view->rootContext()->setContextProperty("version", APP_VERSION);
+    view->rootContext()->setContextProperty("buildyear", BUILD_YEAR);
     view->setSource(SailfishApp::pathTo("qml/subnet-calc.qml"));
     view->show();
     return app->exec();

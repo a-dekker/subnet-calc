@@ -1,3 +1,5 @@
+
+
 /*
   Copyright (C) 2013 Jolla Ltd.
   Contact: Thomas Perl <thomas.perl@jollamobile.com>
@@ -27,20 +29,20 @@
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
 
-ApplicationWindow
-{
+ApplicationWindow {
     id: mainapp
     property string globalMask: "255.255.255.0 /24"
     property string globalIP: ""
     property bool fromSubnetPage: false
-    initialPage: Component { MainPage { } }
+    allowedOrientations: defaultAllowedOrientations
+    _defaultPageOrientations: defaultAllowedOrientations
+
+    initialPage: Component {
+        MainPage {}
+    }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 }
-
-
-
